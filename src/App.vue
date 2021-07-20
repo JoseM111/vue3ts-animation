@@ -4,16 +4,38 @@
 <!-- 🎵🎵🔲🔲◾️◾️◾️◾️◾️◾️◾️ -->
 <script lang="ts">
 import { defineComponent } from 'vue'
+import AnimationComponent from "@/components/AnimationComponent.vue"
 // ⚫️⚫️☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰
 export default defineComponent({
   name: 'App',
+  components: { AnimationComponent },
   //components: {  },
   // Component options data
   data() {
     return {
       flagFade: false,
-      flagZoom: false,
+      flagZoom: true,
+      numbers: [11, 15, 17, 14]
     }
+  },
+  // Component options methods
+  methods: {
+    addItem() {
+      // generates a random number
+      const ranNum = Math.floor(
+          Math.random() * 100 + 1
+      )
+    
+      const index = Math.floor(
+          Math.random() * this.numbers.length
+      )
+    
+      this.numbers.splice(
+          index,
+          0,
+          ranNum
+      )
+    },
   },
 })
 </script>
@@ -36,28 +58,26 @@ export default defineComponent({
         type="button"
         class="btnZoom"
         @click="flagZoom = !flagZoom"
-    >Zoom In
+    >Zoom In-Out
+    </button>
+    
+    <button
+        type="button"
+        class="btnList"
+        @click="addItem"
+    >Add To-List
     </button>
     
     <br>
   
     <!--⚫️ vue-animation ⚫️-->
-    <transition name="fade" mode="out-in">
-      <h1 v-if="flagFade" key="main">
-        <b>@Vue3-fade-animation</b>
-      </h1>
-      <h1 v-else key="secondary">
-        <b>default: @Vue3-UP</b>
-      </h1>
-    </transition>
+    <AnimationComponent
+        :flag-fade="flagFade"
+        :flag-zoom="flagZoom"
+        :numbers="numbers"
+    />
     
-    <transition name="zoom" type="animation">
-      <h1 v-if="flagZoom">
-        <b>@Vue3-zoom-animation</b>
-      </h1>
-    </transition>
-    
-  </div>
+    </div>
   <!-- 🎵🎵🔲🔲◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️ -->
 </template>
 <!-- 🌀🌀💻================================================ -->
@@ -157,6 +177,14 @@ $h1TextShadow: 2px 2px 1px rgba(0, 0, 0, 0.4);
 .appContainer {
   
   /* 🎵🔲🔲️◾️◾️◾️◾️◾ STYLES INSIDE CONTAINER ◾️◾️◾️◾️◾🔲🔲🎵 */
+  li {
+    font: bold 53px "Amazon Ember", serif;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    text-shadow: $h1TextShadow;
+  }
+  
   h1 {
     font-family: "Amazon Ember", serif;
     display: block;
@@ -192,6 +220,21 @@ $h1TextShadow: 2px 2px 1px rgba(0, 0, 0, 0.4);
         $txtHoverColor: black
     );
   }
+  
+  .btnList {
+    @include mixinCenterItem;
+    margin-top: 1rem;
+    
+    @include mixinBtnStyled(
+        $fontParams: bold 2rem "Amazon Ember Cd RC",
+        $bgColor: black,
+        $txtColor: white,
+        $hoverBgColor: dodgerblue,
+        $txtHoverColor: red
+    );
+  }
+  
+  
 }
 
 /// - END OF: appContainer
