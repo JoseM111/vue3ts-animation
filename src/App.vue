@@ -10,7 +10,10 @@ export default defineComponent({
   //components: {  },
   // Component options data
   data() {
-    return { flag: false }
+    return {
+      flagFade: false,
+      flagZoom: false,
+    }
   },
 })
 </script>
@@ -22,18 +25,37 @@ export default defineComponent({
   <!-- 🎵🎵🔲🔲◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️ -->
   <div class="appContainer">
     
-    <button type="button" @click="flag = !flag">
-      Toggle
+    <button
+        type="button"
+        class="btnFade"
+        @click="flagFade = !flagFade"
+    >Fade In
+    </button>
+    
+    <button
+        type="button"
+        class="btnZoom"
+        @click="flagZoom = !flagZoom"
+    >Zoom In
     </button>
     
     <br>
-    
-    <transition name="fade">
-      <h1 v-if="flag">
-        <b>@Vue3-Animation</b>
+  
+    <!--⚫️ vue-animation ⚫️-->
+    <transition name="fade" mode="out-in">
+      <h1 v-if="flagFade" key="main">
+        <b>@Vue3-fade-animation</b>
+      </h1>
+      <h1 v-else key="secondary">
+        <b>default: @Vue3-UP</b>
       </h1>
     </transition>
     
+    <transition name="zoom" type="animation">
+      <h1 v-if="flagZoom">
+        <b>@Vue3-zoom-animation</b>
+      </h1>
+    </transition>
     
   </div>
   <!-- 🎵🎵🔲🔲◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️◾️ -->
@@ -45,11 +67,11 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
 
-$h1TextShadow: 2px 2px 1px rgba(0,0,0,0.4);
+$h1TextShadow: 2px 2px 1px rgba(0, 0, 0, 0.4);
 
 /** @mixins: mixinBtnStyled | */
 
-@mixin mixinBtnStyled($fontParams, $bgColor, $txtColor, $hoverBgColor, $hoverColor) {
+@mixin mixinBtnStyled($fontParams, $bgColor, $txtColor, $hoverBgColor, $txtHoverColor) {
   padding: 20px 40px;
   font: $fontParams;
   background: $bgColor;
@@ -63,7 +85,7 @@ $h1TextShadow: 2px 2px 1px rgba(0,0,0,0.4);
   &:hover {
     transition: all 0.3s ease-in;
     background: $hoverBgColor;
-    color: $hoverColor;
+    color: $txtHoverColor;
     opacity: 0.90;
   }
   
@@ -73,20 +95,64 @@ $h1TextShadow: 2px 2px 1px rgba(0,0,0,0.4);
   }
 }
 
-/** @transition: animation | */
-.fade-enter-from {
-  opacity: 0;
-}
-.fade-enter-active {
-  transition: all 0.25s linear;
-}
-
 @mixin mixinCenterItem() {
   margin: 10rem auto 0;
   display: block;
 }
 
+/** @keyframes | */
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0, 0);
+  }
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1, 1);
+  }
+  to {
+    transform: scale(0, 0);
+  }
+}
+
 /// 🎵🔲🔲◾️◾️◾️◾️◾️◾️◾️◾️◾
+/** @transition: animation | */
+
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all 0.25s linear;
+}
+
+.fade-leave-to {
+  transition: all 0.25s linear;
+  opacity: 0;
+}
+
+.zoom-enter-active {
+  animation: zoomIn 0.65s linear forwards;
+  transition: all 1s linear;
+}
+
+.zoom-leave-active {
+  animation: zoomOut 0.65s linear forwards;
+  transition: all 1s linear;
+}
+
+.zoom-enter-from {
+  opacity: 0;
+}
+
+.zoom-leave-to {
+  opacity: 0;
+}
 
 .appContainer {
   
@@ -102,7 +168,7 @@ $h1TextShadow: 2px 2px 1px rgba(0,0,0,0.4);
     letter-spacing: .1em;
   }
   
-  button {
+  .btnFade {
     @include mixinCenterItem;
     
     @include mixinBtnStyled(
@@ -110,7 +176,20 @@ $h1TextShadow: 2px 2px 1px rgba(0,0,0,0.4);
         $bgColor: dodgerblue,
         $txtColor: white,
         $hoverBgColor: darkorange,
-        $hoverColor: black
+        $txtHoverColor: black
+    );
+  }
+  
+  .btnZoom {
+    @include mixinCenterItem;
+    margin-top: 1rem;
+    
+    @include mixinBtnStyled(
+        $fontParams: bold 2rem "Amazon Ember Cd RC",
+        $bgColor: violet,
+        $txtColor: white,
+        $hoverBgColor: red,
+        $txtHoverColor: black
     );
   }
 }
